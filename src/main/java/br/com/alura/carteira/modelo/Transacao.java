@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter 
+@Getter
 @Setter
-@ToString(exclude = {"data", "quantidade", "tipo"})
+@ToString(exclude = { "data", "quantidade", "tipo" })
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -34,11 +34,20 @@ public class Transacao {
 	private LocalDate data;
 	private BigDecimal preco;
 	private Integer quantidade;
-	
+
 	@Enumerated(EnumType.STRING)
 	private TipoTransacao tipo;
-	
+
 	@ManyToOne
 	private Usuario usuario;
+
+	public Transacao(String ticker, LocalDate data, BigDecimal preco, Integer quantidade, TipoTransacao tipo, Usuario usuario) {
+		this.ticker = ticker;
+		this.data = data;
+		this.preco = preco;
+		this.quantidade = quantidade;
+		this.tipo = tipo;
+		this.usuario = usuario;
+	}
 
 }
