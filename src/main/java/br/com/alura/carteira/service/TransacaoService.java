@@ -35,6 +35,9 @@ public class TransacaoService {
 	public TransacaoDto cadastrar(TransacaoFormDto dto) {
 		Long idUsuario = dto.getUsuarioId();
 		Usuario usuario = usuarioRepository.getById(idUsuario);
+		if (usuario == null) {
+			throw new IllegalArgumentException("usuario nao cadastrado!");
+		}
 
 		Transacao transacao = modelMapper.map(dto, Transacao.class);
 		transacao.setId(null);
