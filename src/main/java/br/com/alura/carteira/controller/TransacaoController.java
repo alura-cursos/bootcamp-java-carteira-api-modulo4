@@ -19,20 +19,25 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.service.TransacaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/transacoes")
+@Api(tags = "Transacoes")
 public class TransacaoController {
 
 	@Autowired
 	private TransacaoService service;
 
 	@GetMapping
+	@ApiOperation("Listar transacoes")
 	public Page<TransacaoDto> listar(@PageableDefault(size = 10) Pageable paginacao) {
 		return service.listar(paginacao);
 	}
 
 	@PostMapping
+	@ApiOperation("Cadastrar transacoes")
 	public ResponseEntity<TransacaoDto> cadastrar(@RequestBody @Valid TransacaoFormDto dto, UriComponentsBuilder uriBuilder) {
 		TransacaoDto cadastrada = service.cadastrar(dto);
 		URI endereco = uriBuilder.path("/transacoes/{id}").buildAndExpand(cadastrada.getId()).toUri();
