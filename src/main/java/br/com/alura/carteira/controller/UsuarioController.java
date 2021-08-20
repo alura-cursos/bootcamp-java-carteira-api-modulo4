@@ -9,13 +9,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.sun.istack.NotNull;
+
+import br.com.alura.carteira.dto.AtualizacaoUsuarioFormDto;
 import br.com.alura.carteira.dto.UsuarioDto;
 import br.com.alura.carteira.dto.UsuarioFormDto;
 import br.com.alura.carteira.service.UsuarioService;
@@ -37,6 +43,27 @@ public class UsuarioController {
 		UsuarioDto cadastrado = service.cadastrar(dto);
 		URI endereco = uriBuilder.path("/usuarios/{id}").buildAndExpand(cadastrado.getId()).toUri();
 		return ResponseEntity.created(endereco).body(cadastrado);
+	}
+
+	@PutMapping
+	public ResponseEntity<UsuarioDto> atualizar(@RequestBody @Valid AtualizacaoUsuarioFormDto dto) {
+		UsuarioDto atualizado = service.atualizar(dto);
+		
+		return ResponseEntity.ok(atualizado);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<UsuarioDto> remover(@PathVariable @NotNull Long id) {
+		service.remover(id);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<UsuarioDto> detalhar(@PathVariable @NotNull Long id) {
+		UsuarioDto detalhado = service.buscarPorId(id);
+
+		return ResponseEntity.ok(detalhado);
 	}
 
 }

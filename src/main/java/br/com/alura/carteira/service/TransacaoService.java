@@ -1,5 +1,7 @@
 package br.com.alura.carteira.service;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.alura.carteira.dto.AtualizacaoTransacaoFormDto;
+import br.com.alura.carteira.dto.DetalhesTransacaoDto;
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.modelo.Transacao;
@@ -46,6 +50,25 @@ public class TransacaoService {
 		repository.save(transacao);
 
 		return modelMapper.map(transacao, TransacaoDto.class);
+	}
+
+	@Transactional
+	public TransacaoDto atualizar(AtualizacaoTransacaoFormDto dto) {
+		Long idTransacao = dto.getId();
+		Transacao transacao = repository.findById(idTransacao).orElseThrow(() -> new EntityNotFoundException());
+		
+		transacao.atualizarInformacoes(dto.getTicker(), dto.getData(), dto.getPreco(), dto.getQuantidade(), dto.getTipo());
+		return modelMapper.map(transacao, TransacaoDto.class);
+	}
+
+	@Transactional
+	public void remover(Long id) {
+		repository.deleteById(id);
+	}
+
+	public DetalhesTransacaoDto buscarPorId(Long id) {
+		Transacao transacao = repository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+		return modelMapper.map(transacao, DetalhesTransacaoDto.class);
 	}
 
 }
